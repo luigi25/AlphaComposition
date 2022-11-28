@@ -12,7 +12,7 @@
 using namespace cv;
 using namespace std;
 
-double sequentialTest(int numExecutions, int imgSize, const float* flatImgA, const float* flatImgB){
+double sequentialTest(RGBAImage imgA, int numExecutions, int imgSize, const float* flatImgA, const float* flatImgB){
     double meanExecutionsTime = 0;
     for(int execution=0; execution < numExecutions; execution++) {
         float* flatMixImages = new float[imgSize];
@@ -41,14 +41,13 @@ double sequentialTest(int numExecutions, int imgSize, const float* flatImgA, con
         executionTime = chrono::system_clock::now() - start;
         auto executionTimeMilliseconds = chrono::duration_cast<chrono::milliseconds>(executionTime);
         meanExecutionsTime += (double)executionTimeMilliseconds.count();
-        free(flatMixImages);
         // todo visualize result image (need to pass imgA image to the function)
-//        Mat reconstructed_image = imageReconstruction(flatMixImages, imgA.getWidth(), imgA.getHeight(), imgA.getNumChannels());
-//        namedWindow("RGBA Image", WINDOW_NORMAL);
-//        resizeWindow("RGBA Image", (int)(imgA.getWidth()*0.35), (int)(imgA.getHeight()*0.35));
-//        imshow("RGBA Image", reconstructed_image);
-//        waitKey(0);
-
+        Mat reconstructed_image = imageReconstruction(flatMixImages, imgA.getWidth(), imgA.getHeight(), imgA.getNumChannels());
+        namedWindow("RGBA Image", WINDOW_NORMAL);
+        resizeWindow("RGBA Image", (int)(imgA.getWidth()*0.35), (int)(imgA.getHeight()*0.35));
+        imshow("RGBA Image", reconstructed_image);
+        waitKey(0);
+        free(flatMixImages);
     }
     return meanExecutionsTime / numExecutions;
 }

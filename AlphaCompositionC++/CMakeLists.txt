@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.23)
+cmake_minimum_required(VERSION 3.22)
 project(AlphaComposition)
 message(STATUS "Checking OpenMP")
 find_package(OpenMP)

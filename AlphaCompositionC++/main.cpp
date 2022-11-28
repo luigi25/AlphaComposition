@@ -15,7 +15,7 @@ int main(){
     int imgSize = imgA.getSize();
     int numExecutions = 100;
     cout << "Sequential Test" << endl;
-    double meanExecTimeSequentialTest = sequentialTest(numExecutions, imgSize, flatImgA, flatImgB);
+    double meanExecTimeSequentialTest = sequentialTest(imgA, numExecutions, imgSize, flatImgA, flatImgB);
     cout << "Mean Sequential execution time: " << floor(meanExecTimeSequentialTest * 100.) / 100. << " milliseconds\n" << endl;
 
     cout << "OpenMP Test" << endl;
@@ -25,6 +25,5 @@ int main(){
     for(int n_thread = 1; n_thread <= n_threads; n_thread++) {
         cout << "Mean OpenMP execution time with " << n_thread << " thread: " << floor(meanExecTimeOpenMPTest[n_thread - 1] * 100.) / 100. << " milliseconds" << endl;
     }
-
     return 0;
 }

@@ -21,7 +21,7 @@ vector<double> parallelOpenMPTest(int numExecutions, int nThreads, int imgSize, 
             auto start = chrono::system_clock::now();
             #pragma omp parallel num_threads(n_thread) default(none) shared(imgSize, flatMixImages, flatImgA, flatImgB)
             {
-                #pragma omp for schedule(static) nowait //todo add schedule, nowait
+                #pragma omp for schedule(static) nowait
                 for (int i = 0; i < imgSize; i += 4) {
                     float alphaA = flatImgA[i + 3] / 255;
                     float alphaB = flatImgB[i + 3] / 255;
