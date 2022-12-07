@@ -1,39 +1,57 @@
 from RGBAImage.RGBAimage import RGBAImage
-from RGBAImage.imageReconstruction import imageReconstruction
-import numpy as np
-from AlphaBlendTests.sequentialAlphaBlend import sequentialTest
-from AlphaBlendTests.parallelAlphaBlend import parallelTest
-import cv2
+from AlphaBlendTests.sequentialAlphaBlend import sequentialTest, sequentialTestPlot
+from AlphaBlendTests.parallelAlphaBlend import parallelTest, parallelTestPlot
 
 
 def main():
+    flatImages = []
     # Read the images
-    imgA = RGBAImage("images/RayBan.png")
-    flatImgA = imgA.createFlatImage()
-    imgB = RGBAImage("images/Oro_Base.png")
-    flatImgB = imgB.createFlatImage()
-    imgSize = imgA.getSize()
-    num_executions = 1
-    n_threads = 2
+    pandaImg = RGBAImage("./images/panda.png")
+    flatPandaImg = pandaImg.createFlatImage()
+    batmanImg = RGBAImage("./images/batman.png")
+    flatBatmanImg = batmanImg.createFlatImage()
+    hatImg = RGBAImage("./images/hat.png")
+    flatHatImg = hatImg.createFlatImage()
+    glassesImg = RGBAImage("./images/3DGlasses.png")
+    flatGlassesImg = glassesImg.createFlatImage()
+    canImg = RGBAImage("./images/can.png")
+    flatCanImg = canImg.createFlatImage()
+    flatImages.append(flatPandaImg)
+    flatImages.append(flatBatmanImg)
+    flatImages.append(flatHatImg)
+    flatImages.append(flatGlassesImg)
+    flatImages.append(flatCanImg)
+    test_phase = False
+
+    imgSize = pandaImg.getSize()
+    numExecutions = 3
+    n_threads = 16
     print("Sequential Test")
-    # mean_sequential_test = sequentialTest(num_executions, imgSize, flatImgA, flatImgB)
-    mean_sequential_test = sequentialTest(imgA, num_executions, imgSize, flatImgA, flatImgB)
-    print("Mean Sequential execution time:", round(mean_sequential_test, 2), "milliseconds\n")
+
+
+    # if test_phase:
+    #     sequentialTestPlot(pandaImg, imgSize, flatImages)
+    # else:
+    #     mean_sequential_test = sequentialTest(numExecutions, imgSize, flatImages)
+    #     print("Mean Sequential execution time:", round(mean_sequential_test, 2), "milliseconds\n")
+
 
     print("Joblib Test")
-    # mean_joblib_test = parallelTest(imgA, num_executions, n_threads, imgSize, flatImgA, flatImgB)
-    mean_joblib_test = parallelTest(num_executions, n_threads, imgSize, flatImgA, flatImgB)
-    for n_thread in range(2, n_threads + 1):
-        print("Mean Joblib execution time with", n_thread, "thread:", round(mean_joblib_test[n_thread - 1], 2),
-              "milliseconds")
+    if test_phase:
+        parallelTestPlot(pandaImg, n_threads, imgSize, flatImages)
+    else:
+        mean_joblib_test = parallelTest(numExecutions, n_threads, imgSize, flatImages)
+        for n_thread in range(2, n_threads + 1, 2):
+            print("Mean Joblib execution time with", str(n_thread), "thread:", str(round(mean_joblib_test[int(n_thread/2) - 1], 2)), "milliseconds")
 
-    with open("alphaBlendTests.txt", "w") as file:
-        file.write("Sequential Test")
-        file.write("Mean Sequential execution time: " + str(round(mean_sequential_test, 2)) + " milliseconds\n")
-        file.write("Joblib Test")
-        for n_thread in range(2, n_threads + 1):
-            file.write("Mean Joblib execution time with " + str(n_thread) + " thread: " + str(round(mean_joblib_test[n_thread - 1], 2)) + " milliseconds")
-        file.close()
+    # if not test_phase:
+    #     with open("alphaBlendTests.txt", "w") as file:
+    #         file.write("Sequential Test\n")
+    #         file.write("Mean Sequential execution time: " + str(round(mean_sequential_test, 2)) + " milliseconds\n\n")
+    #         file.write("Joblib Test\n")
+    #         for n_thread in range(2, n_threads + 1, 2):
+    #             file.write("Mean Joblib execution time with " + str(n_thread) + " thread: " + str(round(mean_joblib_test[int(n_thread/2) - 1], 2)) + " milliseconds\n")
+    #         file.close()
 
 
 if __name__ == '__main__':
