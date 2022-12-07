@@ -41,17 +41,3 @@ float* RGBAImage::createFlatImage() {
     }
     return flatImage;
 }
-
-float* RGBAImage::getPixel(int i, int j){
-    Vec4b pixel = image.at<Vec4b>(j, i);
-    float* pixelChannels = new float[getNumChannels()];
-    pixelChannels[0] = (float)pixel[2];
-    pixelChannels[1] = (float)pixel[1];
-    pixelChannels[2] = (float)pixel[0];
-    pixelChannels[3] = (float)pixel[3];
-    return pixelChannels;
-}
-
-void RGBAImage::showImage(){
-    imshow("RGBA Image", image);
-}

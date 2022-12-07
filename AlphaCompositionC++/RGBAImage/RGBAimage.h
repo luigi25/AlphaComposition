@@ -20,7 +20,5 @@ public:
     int getNumChannels() const;
     int getSize() const;
     float* createFlatImage();
-    float* getPixel(int i, int j);
-    void showImage();
 };
 #endif //ALPHACOMPOSITION_RGBAIMAGE_H
