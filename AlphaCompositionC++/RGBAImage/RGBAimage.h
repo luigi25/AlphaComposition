@@ -10,7 +10,7 @@ using namespace cv;
 
 class RGBAImage {
 private:
-    int width, height, num_channels;
+    int width, height, numChannels;
     Mat image;
 
 public:

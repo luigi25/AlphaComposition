@@ -6,7 +6,7 @@ RGBAImage::RGBAImage(const String& path) {
 
     width = image.cols;
     height = image.rows;
-    num_channels = image.channels();
+    numChannels = image.channels();
 }
 
 int RGBAImage::getWidth() const {
@@ -18,11 +18,11 @@ int RGBAImage::getHeight() const {
 }
 
 int RGBAImage::getNumChannels() const {
-    return num_channels;
+    return numChannels;
 }
 
 int RGBAImage::getSize() const {
-    return getWidth()*getHeight()*getNumChannels();
+    return width * height * numChannels;
 }
 
 float* RGBAImage::createFlatImage() {
@@ -30,13 +30,13 @@ float* RGBAImage::createFlatImage() {
     float* flatImage = new float[size];
 
     // scroll by rows
-    for(int i=0; i < getHeight(); i++) {
-        for (int j = 0; j < getWidth(); j++) {
+    for(int i=0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
             Vec4b pixel = image.at<Vec4b>(i, j);
-            flatImage[(i * getWidth() * getNumChannels()) + (j * getNumChannels())] = (float)pixel[2];
-            flatImage[(i * getWidth() * getNumChannels()) + (j * getNumChannels()) + 1] = (float)pixel[1];
-            flatImage[(i * getWidth() * getNumChannels()) + (j * getNumChannels()) + 2] = (float)pixel[0];
-            flatImage[(i * getWidth() * getNumChannels()) + (j * getNumChannels()) + 3] = (float)pixel[3];
+            flatImage[(i * width * numChannels) + (j * numChannels)] = (float)pixel[2];
+            flatImage[(i * width * numChannels) + (j * numChannels) + 1] = (float)pixel[1];
+            flatImage[(i * width * numChannels) + (j * numChannels) + 2] = (float)pixel[0];
+            flatImage[(i * width * numChannels) + (j * numChannels) + 3] = (float)pixel[3];
         }
     }
     return flatImage;

@@ -20,8 +20,6 @@ vector<double> parallelOpenMPTest(int numExecutions, int nThreads, int imgSize, 
         double meanExecutionsTime = 0;
         for (int execution = 0; execution < numExecutions; execution++) {
             float* flatMixImages = new float[imgSize];
-//            for(int i = 0; i < imgSize; i++)
-//                flatMixImages[i] = flatImages[0][i];
             auto start = chrono::system_clock::now();
             #pragma omp parallel num_threads(n_thread) default(none) shared(imgSize, flatMixImages, flatImages)
             {
@@ -49,18 +47,10 @@ vector<double> parallelOpenMPTest(int numExecutions, int nThreads, int imgSize, 
                         }
 
                     }
-//                    # pragma omp critical
-//                    {
-//                        flatMixImages[i] = r;
-//                        flatMixImages[i + 1] = g;
-//                        flatMixImages[i + 2] = b;
-//                        flatMixImages[i + 3] = a;
-//                    }
                     flatMixImages[i] = r;
                     flatMixImages[i + 1] = g;
                     flatMixImages[i + 2] = b;
                     flatMixImages[i + 3] = a;
-
                 }
             }
             chrono::duration<double> executionTime{};
