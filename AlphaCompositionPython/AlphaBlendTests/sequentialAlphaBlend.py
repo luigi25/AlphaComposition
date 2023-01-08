@@ -7,13 +7,12 @@ from RGBAImage.imageReconstruction import imageReconstruction
 def sequentialTest(num_executions, imgSize, flatImages):
     mean_executions_time = 0
     for execution in range(0, num_executions):
-        print("execution:", execution)
+        # print("execution:", execution)
         flatMixImages = np.zeros(shape=imgSize)
         for i in range(0, imgSize):
             flatMixImages[i] = flatImages[0][i]
         start = time.time()
         for i in range(0, imgSize, 4):
-            # create_mixed_image_sequential(flatMixImages[i:i + 4], [flatImages[j][i:i + 4] for j in range(len(flatImages)) if j > 0])
             for j in range(1, len(flatImages)):
                 alphaA = flatImages[j][i + 3] / 255
                 alphaB = flatMixImages[i + 3] / 255
@@ -30,8 +29,8 @@ def sequentialTest(num_executions, imgSize, flatImages):
                     flatMixImages[i + 3] = (((alpha_component - 0) * 255) / 1)
 
         exec_time = time.time() - start
-        exec_time_milliseconds = exec_time * 1000
-        mean_executions_time += exec_time_milliseconds
+        exec_time_microseconds = exec_time * pow(10, 6)
+        mean_executions_time += exec_time_microseconds
 
         del flatMixImages
 
@@ -43,7 +42,6 @@ def sequentialTestPlot(pandaImg, imgSize, flatImages):
     for i in range(0, imgSize):
         flatMixImages[i] = flatImages[0][i]
     for i in range(0, imgSize, 4):
-        # create_mixed_image_sequential(flatMixImages[i:i + 4], [flatImages[j][i:i + 4] for j in range(len(flatImages)) if j > 0])
         for j in range(1, len(flatImages)):
             alphaA = flatImages[j][i + 3] / 255
             alphaB = flatMixImages[i + 3] / 255

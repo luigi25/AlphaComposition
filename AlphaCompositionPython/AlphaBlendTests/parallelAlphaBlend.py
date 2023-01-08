@@ -15,6 +15,7 @@ def parallelTest(num_executions, nThreads, imgSize, flatImages):
         os.makedirs(folder)
     output_filename_memmap = os.path.join(folder, 'flatMixImage')
 
+    index = 0
     for n_thread in range(2, nThreads + 1, 2):
         print("n_thread:", n_thread)
         mean_executions_time = 0
@@ -24,25 +25,21 @@ def parallelTest(num_executions, nThreads, imgSize, flatImages):
             bounds.append((i * 4 * chunk, (i + 1) * 4 * chunk))
         bounds.append(((n_thread - 1) * 4 * chunk, imgSize))
         for execution in range(0, num_executions):
-            print("execution:", execution)
+            # print("execution:", execution)
             flatMixImage = np.memmap(output_filename_memmap, shape=imgSize, mode='w+')
             start = time.time()
-            # todo try with loky and multithreading backend
-            # multiprocessing, threading, loky
-
+            # todo try with multiprocessing, threading, loky backend
             Parallel(n_jobs=n_thread, backend="loky", mmap_mode="r+")(
-                delayed(create_mixed_image_parallel)(flatMixImage[bounds[i][0]:bounds[i][1]], [image[bounds[i][0]:bounds[i][1]] for image in flatImages]) for i in range(0, n_thread))
-
-            # Parallel(n_jobs=n_thread, backend="loky", mmap_mode="r+")(
-            #     delayed(create_mixed_image_parallel_naive)(flatMixImage[i:i + 4], [image[i:i + 4] for image in flatImages]) for i in
-            #     range(0, imgSize, 4))
+                delayed(create_mixed_image_parallel)(flatMixImage[bounds[i][0]:bounds[i][1]],
+                                                     [image[bounds[i][0]:bounds[i][1]] for image in flatImages]) for i in range(0, n_thread))
 
             exec_time = time.time() - start
-            exec_time_milliseconds = exec_time * 1000
-            mean_executions_time += exec_time_milliseconds
+            exec_time_microseconds = exec_time * pow(10, 6)
+            mean_executions_time += exec_time_microseconds
 
             del flatMixImage
-        mean_executions_time_vec[int(n_thread/2) - 1] = mean_executions_time / num_executions
+        mean_executions_time_vec[index] = mean_executions_time / num_executions
+        index = index + 1
 
     try:
         shutil.rmtree(folder)
@@ -71,10 +68,6 @@ def parallelTestPlot(pandaImg, nThreads, imgSize, flatImages):
         Parallel(n_jobs=n_thread, backend="loky", mmap_mode="r+")(
             delayed(create_mixed_image_parallel)(flatMixImage[bounds[i][0]:bounds[i][1]],
                                                  [image[bounds[i][0]:bounds[i][1]] for image in flatImages]) for i in range(0, n_thread))
-
-        # Parallel(n_jobs=n_thread, backend="loky", mmap_mode="r+")(
-        #     delayed(create_mixed_image_parallel_naive)(flatMixImage[i:i + 4], [image[i:i + 4] for image in flatImages]) for i
-        #     in range(0, imgSize, 4))
 
         reconstructed_image = imageReconstruction(flatMixImage, pandaImg.getWidth(), pandaImg.getHeight(),
                                                   pandaImg.getNumChannels())
