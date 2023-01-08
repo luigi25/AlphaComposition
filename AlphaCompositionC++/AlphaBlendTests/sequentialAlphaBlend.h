@@ -43,8 +43,8 @@ double sequentialTest(int numExecutions, int imgSize, vector<float*> flatImages)
         }
         chrono::duration<double> executionTime{};
         executionTime = chrono::system_clock::now() - start;
-        auto executionTimeMilliseconds = chrono::duration_cast<chrono::milliseconds>(executionTime);
-        meanExecutionsTime += (double)executionTimeMilliseconds.count();
+        auto executionTimeMicroseconds = chrono::duration_cast<chrono::microseconds>(executionTime);
+        meanExecutionsTime += (double)executionTimeMicroseconds.count();
         free(flatMixImages);
     }
     return meanExecutionsTime / numExecutions;

@@ -15,8 +15,7 @@ using namespace std;
 
 vector<double> parallelOpenMPTest(int numExecutions, int nThreads, int imgSize, vector<float*> flatImages){
     vector<double> meanExecutionsTimeVec;
-    for(int n_thread = 2; n_thread <= nThreads; n_thread+=2) {
-        cout << "Thread number: " << n_thread << endl;
+    for(int n_thread = 2; n_thread <= nThreads; n_thread += 2) {
         double meanExecutionsTime = 0;
         for (int execution = 0; execution < numExecutions; execution++) {
             float* flatMixImages = new float[imgSize];
@@ -55,8 +54,8 @@ vector<double> parallelOpenMPTest(int numExecutions, int nThreads, int imgSize, 
             }
             chrono::duration<double> executionTime{};
             executionTime = chrono::system_clock::now() - start;
-            auto executionTimeMilliseconds = chrono::duration_cast<chrono::milliseconds>(executionTime);
-            meanExecutionsTime += (double)executionTimeMilliseconds.count();
+            auto executionTimeMicroseconds = chrono::duration_cast<chrono::microseconds>(executionTime);
+            meanExecutionsTime += (double)executionTimeMicroseconds.count();
             free(flatMixImages);
         }
         meanExecutionsTimeVec.push_back(meanExecutionsTime / numExecutions);
