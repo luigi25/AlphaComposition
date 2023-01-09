@@ -8,13 +8,11 @@ using namespace std;
 int main(){
     int numExecutions = 100;
     int n_threads = 20;
-//    sequentialTestPlot(pandaImg, imgSize, flatImages);
-//    parallelOpenMPTestPlot(pandaImg, n_threads, imgSize, flatImages);
-    vector<string> folder_names = {"480", "720", "1080", "2K", "4K"};
 
+    vector<string> folder_names = {"480", "720", "1080", "2K", "4K"};
     for(const auto& name: folder_names){
         vector<float*> flatImages;
-        // Read the images
+        // read the images
         RGBAImage pandaImg = RGBAImage("../images/" + name + "/panda.png");
         float* flatPandaImg = pandaImg.createFlatImage();
         RGBAImage batmanImg = RGBAImage("../images/" + name + "/batman.png");
@@ -25,16 +23,21 @@ int main(){
         float* flatGlassesImg = glassesImg.createFlatImage();
         RGBAImage canImg = RGBAImage("../images/" + name + "/can.png");
         float* flatCanImg = canImg.createFlatImage();
+
+        // collect images into a vector
         flatImages.push_back(flatPandaImg);
         flatImages.push_back(flatBatmanImg);
         flatImages.push_back(flatHatImg);
         flatImages.push_back(flatGlassesImg);
         flatImages.push_back(flatCanImg);
         int imgSize = pandaImg.getSize();
-//        cout << "Sequential Test with " << name << "p" << endl;
-//        double meanExecTimeSequentialTest = sequentialTest(numExecutions, imgSize, flatImages);
-//        cout << "Mean Sequential execution time: " << floor(meanExecTimeSequentialTest * 100.) / 100. << " microseconds\n" << endl;
 
+        // sequential test
+        cout << "Sequential Test with " << name << "p" << endl;
+        double meanExecTimeSequentialTest = sequentialTest(numExecutions, imgSize, flatImages);
+        cout << "Mean Sequential execution time: " << floor(meanExecTimeSequentialTest * 100.) / 100. << " microseconds\n" << endl;
+
+        // OpenMP test
         cout << "OpenMP Test with " << name << "p" << endl;
         vector<double> meanExecTimeOpenMPTest = parallelOpenMPTest(numExecutions, n_threads, imgSize, flatImages);
         int index = 0;

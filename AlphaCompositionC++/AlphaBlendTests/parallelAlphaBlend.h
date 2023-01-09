@@ -18,8 +18,10 @@ vector<double> parallelOpenMPTest(int numExecutions, int nThreads, int imgSize, 
     for(int n_thread = 2; n_thread <= nThreads; n_thread += 2) {
         double meanExecutionsTime = 0;
         for (int execution = 0; execution < numExecutions; execution++) {
+            // create the output image
             float* flatMixImages = new float[imgSize];
             auto start = chrono::system_clock::now();
+            // start alpha composition
             #pragma omp parallel num_threads(n_thread) default(none) shared(imgSize, flatMixImages, flatImages)
             {
                 #pragma omp for schedule(static) nowait
@@ -68,8 +70,6 @@ void parallelOpenMPTestPlot(RGBAImage pandaImg, int nThreads, int imgSize, vecto
     for(int n_thread = 2; n_thread <= nThreads; n_thread+=2) {
         cout << "Thread number: " << n_thread << endl;
         float* flatMixImages = new float[imgSize];
-//        for(int i = 0; i < imgSize; i++)
-//            flatMixImages[i] = flatImages[0][i];
         #pragma omp parallel num_threads(n_thread) default(none) shared(imgSize, flatMixImages, flatImages)
         {
             #pragma omp for schedule(static) nowait
@@ -103,10 +103,10 @@ void parallelOpenMPTestPlot(RGBAImage pandaImg, int nThreads, int imgSize, vecto
             }
         }
         Mat reconstructed_image = imageReconstruction(flatMixImages, pandaImg.getWidth(), pandaImg.getHeight(), pandaImg.getNumChannels());
-//        namedWindow("RGBA Image", WINDOW_NORMAL);
-//        resizeWindow("RGBA Image", (int)(pandaImg.getWidth()*0.35), (int)(pandaImg.getHeight()*0.35));
-//        imshow("RGBA Image", reconstructed_image);
-//        waitKey(0);
+        namedWindow("RGBA Image", WINDOW_NORMAL);
+        resizeWindow("RGBA Image", (int)(pandaImg.getWidth()*0.35), (int)(pandaImg.getHeight()*0.35));
+        imshow("RGBA Image", reconstructed_image);
+        waitKey(0);
         imwrite("../results/sequential_" + to_string(n_thread) + ".png", reconstructed_image);
         free(flatMixImages);
     }

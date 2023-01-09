@@ -15,10 +15,12 @@ using namespace std;
 double sequentialTest(int numExecutions, int imgSize, vector<float*> flatImages){
     double meanExecutionsTime = 0;
     for(int execution=0; execution < numExecutions; execution++) {
+        // create the output image
         float* flatMixImages = new float[imgSize];
         for(int i = 0; i < imgSize; i++)
             flatMixImages[i] = flatImages[0][i];
         auto start = chrono::system_clock::now();
+        // start alpha composition
         for (int i = 0; i < imgSize; i += 4) {
             for (int j = 1; j < flatImages.size(); j++) {
                 float alphaA = flatImages[j][i + 3] / 255;
@@ -78,10 +80,10 @@ void sequentialTestPlot(const RGBAImage& pandaImg, int imgSize, vector<float*> f
         }
     }
     Mat reconstructed_image = imageReconstruction(flatMixImages, pandaImg.getWidth(), pandaImg.getHeight(), pandaImg.getNumChannels());
-//    namedWindow("RGBA Image", WINDOW_NORMAL);
-//    resizeWindow("RGBA Image", (int)(pandaImg.getWidth()*0.35), (int)(pandaImg.getHeight()*0.35));
-//    imshow("RGBA Image", reconstructed_image);
-//    waitKey(0);
+    namedWindow("RGBA Image", WINDOW_NORMAL);
+    resizeWindow("RGBA Image", (int)(pandaImg.getWidth()*0.35), (int)(pandaImg.getHeight()*0.35));
+    imshow("RGBA Image", reconstructed_image);
+    waitKey(0);
     imwrite("../results/sequential.png", reconstructed_image);
     free(flatMixImages);
 }
