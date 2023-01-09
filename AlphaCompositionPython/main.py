@@ -10,7 +10,7 @@ def main():
     folder_names = ["480", "720", "1080", "2K", "4K"]
     for f in folder_names:
         flatImages = []
-        # Read the images
+        # read the images
         pandaImg = RGBAImage("./images/" + f + "/panda.png")
         flatPandaImg = pandaImg.createFlatImage()
         batmanImg = RGBAImage("./images/" + f + "/batman.png")
@@ -21,19 +21,22 @@ def main():
         flatGlassesImg = glassesImg.createFlatImage()
         canImg = RGBAImage("./images/" + f + "/can.png")
         flatCanImg = canImg.createFlatImage()
+
+        # collect images into a vector
         flatImages.append(flatPandaImg)
         flatImages.append(flatBatmanImg)
         flatImages.append(flatHatImg)
         flatImages.append(flatGlassesImg)
         flatImages.append(flatCanImg)
-
         imgSize = pandaImg.getSize()
 
-        # print("Sequential Test with " + f + "p")
-        # # sequentialTestPlot(pandaImg, imgSize, flatImages)
-        # mean_sequential_test = sequentialTest(num_executions, imgSize, flatImages)
-        # print("Mean Sequential execution time:", round(mean_sequential_test, 2), "microseconds\n")
+        # sequential test
+        print("Sequential Test with " + f + "p")
+        # sequentialTestPlot(pandaImg, imgSize, flatImages)
+        mean_sequential_test = sequentialTest(num_executions, imgSize, flatImages)
+        print("Mean Sequential execution time:", round(mean_sequential_test, 2), "microseconds\n")
 
+        # Joblib test
         print("Joblib Test with " + f + "p")
         # parallelTestPlot(pandaImg, n_threads, imgSize, flatImages)
         mean_joblib_test = parallelTest(num_executions, n_threads, imgSize, flatImages)

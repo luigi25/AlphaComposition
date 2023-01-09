@@ -1,4 +1,5 @@
 def create_mixed_image_parallel(flatMixImages, flatImages):
+    # start alpha composition
     for i in range(0, len(flatMixImages), 4):
         r, g, b, a = 0, 0, 0, 0
         for j in range(0, len(flatImages)):

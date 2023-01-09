@@ -7,11 +7,12 @@ from RGBAImage.imageReconstruction import imageReconstruction
 def sequentialTest(num_executions, imgSize, flatImages):
     mean_executions_time = 0
     for execution in range(0, num_executions):
-        # print("execution:", execution)
+        # create the output image
         flatMixImages = np.zeros(shape=imgSize)
         for i in range(0, imgSize):
             flatMixImages[i] = flatImages[0][i]
         start = time.time()
+        # start alpha composition
         for i in range(0, imgSize, 4):
             for j in range(1, len(flatImages)):
                 alphaA = flatImages[j][i + 3] / 255
