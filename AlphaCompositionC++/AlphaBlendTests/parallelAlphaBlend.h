@@ -30,7 +30,6 @@ vector<double> parallelOpenMPTest(int numExecutions, int nThreads, int imgSize, 
                     float g = 0;
                     float b = 0;
                     float a = 0;
-
                     for (int j = 0; j < flatImages.size(); j++) {
                         float alphaA = flatImages[j][i + 3] / 255;
                         float alphaB = a / 255;
